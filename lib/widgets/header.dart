@@ -3,7 +3,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_forecast/controllers/global_controller.dart';
-import 'package:weather_forecast/utilities/custom_colors.dart';
 
 class Header extends StatefulWidget {
   final String? searchCity;
@@ -37,7 +36,6 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
-    final darkMode = Get.isDarkMode;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,10 +53,7 @@ class _HeaderState extends State<Header> {
           alignment: Alignment.topLeft,
           child: Text(
             date,
-            style: TextStyle(
-                fontSize: 14,
-                color: darkMode ? Colors.white : CustomColors.textColorBlack,
-                height: 1.5),
+            style: const TextStyle(fontSize: 14, height: 1.5),
           ),
         ),
       ],

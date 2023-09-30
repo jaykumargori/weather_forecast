@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:weather_forecast/models/weather_data_current.dart';
 import 'package:weather_forecast/utilities/custom_colors.dart';
@@ -11,7 +10,6 @@ class ComfortLevel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool darkMode = Get.isDarkMode;
     return Column(
       children: [
         Container(
@@ -35,11 +33,9 @@ class ComfortLevel extends StatelessWidget {
                       customWidths: CustomSliderWidths(
                           handlerSize: 0, trackWidth: 12, progressBarWidth: 12),
                       infoProperties: InfoProperties(
-                          mainLabelStyle: TextStyle(
-                              fontSize: 30,
-                              color: darkMode
-                                  ? Colors.white
-                                  : CustomColors.textColorBlack),
+                          mainLabelStyle: const TextStyle(
+                            fontSize: 30,
+                          ),
                           bottomLabelText: "Humidity",
                           bottomLabelStyle: const TextStyle(
                               letterSpacing: 0.1, fontSize: 14, height: 1.5)),
@@ -58,25 +54,19 @@ class ComfortLevel extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RichText(
-                    text: TextSpan(children: [
+                  Text.rich(
+                    TextSpan(children: [
                       TextSpan(
                           text: "Feels Like ",
                           style: TextStyle(
                               fontSize: 14,
                               height: 0.8,
-                              color: darkMode
-                                  ? Colors.white
-                                  : CustomColors.textColorBlack,
                               fontWeight: FontWeight.w400)),
                       TextSpan(
                           text: "${weatherDataCurrent.current.feelsLike}",
                           style: TextStyle(
                               fontSize: 14,
                               height: 0.8,
-                              color: darkMode
-                                  ? Colors.white
-                                  : CustomColors.textColorBlack,
                               fontWeight: FontWeight.w400))
                     ]),
                   ),
@@ -86,25 +76,19 @@ class ComfortLevel extends StatelessWidget {
                     width: 1,
                     color: CustomColors.dividerLine,
                   ),
-                  RichText(
-                    text: TextSpan(children: [
+                  Text.rich(
+                    TextSpan(children: [
                       TextSpan(
                           text: "UV Index ",
                           style: TextStyle(
                               fontSize: 14,
                               height: 0.8,
-                              color: darkMode
-                                  ? Colors.white
-                                  : CustomColors.textColorBlack,
                               fontWeight: FontWeight.w400)),
                       TextSpan(
                           text: "${weatherDataCurrent.current.uvIndex}",
                           style: TextStyle(
                               fontSize: 14,
                               height: 0.8,
-                              color: darkMode
-                                  ? Colors.white
-                                  : CustomColors.textColorBlack,
                               fontWeight: FontWeight.w400))
                     ]),
                   ),

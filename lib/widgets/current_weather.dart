@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:weather_forecast/models/weather_data_current.dart';
 import 'package:weather_forecast/utilities/custom_colors.dart';
 
@@ -115,16 +114,13 @@ class CurrentWeather extends StatelessWidget {
             width: 1,
             color: CustomColors.dividerLine,
           ),
-          RichText(
-            text: TextSpan(children: [
+          Text.rich(
+            TextSpan(children: [
               TextSpan(
                   text: "${weatherDataCurrent.current.temp!.toInt()}°C",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 50,
-                    color: Get.isDarkMode
-                        ? Colors.white
-                        : CustomColors.textColorBlack,
                   )),
               TextSpan(
                   text:

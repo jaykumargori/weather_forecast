@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_forecast/models/weather_data_daily.dart';
 import 'package:weather_forecast/utilities/custom_colors.dart';
@@ -18,7 +17,6 @@ class DailyDataForecast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final darkMode = Get.isDarkMode;
     return Container(
       height: 360,
       margin: const EdgeInsets.all(20),
@@ -31,11 +29,9 @@ class DailyDataForecast extends StatelessWidget {
           Container(
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(bottom: 10),
-            child: Text(
+            child: const Text(
               "Next Days",
-              style: TextStyle(
-                  color: darkMode ? Colors.white : CustomColors.textColorBlack,
-                  fontSize: 17),
+              style: TextStyle(fontSize: 17),
             ),
           ),
           dailyList(),
@@ -65,11 +61,7 @@ class DailyDataForecast extends StatelessWidget {
                         width: 80,
                         child: Text(
                           getDay(weatherDataDaily.daily[index].dt),
-                          style: TextStyle(
-                              color: Get.isDarkMode
-                                  ? Colors.white
-                                  : CustomColors.textColorBlack,
-                              fontSize: 13),
+                          style: const TextStyle(fontSize: 13),
                         ),
                       ),
                       SizedBox(

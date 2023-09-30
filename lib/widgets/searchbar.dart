@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:weather_forecast/utilities/custom_colors.dart';
 
 class SearchFeld extends StatefulWidget {
@@ -17,9 +16,6 @@ class _SearchFeldState extends State<SearchFeld> {
       elevation: 9,
       child: Container(
         margin: const EdgeInsets.only(bottom: 8.0),
-        color: Get.isDarkMode
-            ? CustomColors.dividerLine.withAlpha(150)
-            : Colors.white,
         height: 80,
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         child: TextField(
@@ -31,9 +27,6 @@ class _SearchFeldState extends State<SearchFeld> {
               color: Colors.grey,
             ),
             filled: true,
-            fillColor: !Get.isDarkMode
-                ? CustomColors.dividerLine.withAlpha(150)
-                : Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(
