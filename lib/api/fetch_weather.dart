@@ -15,7 +15,8 @@ class FetchWeatherAPI {
   Future<WeatherData> processData(lat, lon, units,
       {forceRefresh = false}) async {
     if (!forceRefresh) {
-      final savedWeatherData = await WeatherDataStorage.getWeatherData();
+      final savedWeatherData =
+          await WeatherDataStorage.getWeatherData(lat, lon, units);
       if (savedWeatherData != null) {
         return savedWeatherData;
       }
@@ -30,7 +31,7 @@ class FetchWeatherAPI {
             WeatherDataCurrent.fromJson(jsonString),
             WeatherDataHourly.fromJson(jsonString),
             WeatherDataDaily.fromJson(jsonString));
-        await WeatherDataStorage.saveWeatherData(weatherData);
+        await WeatherDataStorage.saveWeatherData(weatherData, lat, lon, units);
         return weatherData!;
       } else {
         // Handle non-200 status codes here, e.g., by throwing an exception

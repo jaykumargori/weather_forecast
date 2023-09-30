@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather_forecast/screens/home.dart';
 import 'package:weather_forecast/screens/search.dart';
+import 'package:weather_forecast/utilities/theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +22,8 @@ class MyApp extends StatelessWidget {
       ],
       title: "Weather",
       debugShowCheckedModeBanner: false,
+      theme: theme,
+      darkTheme: darkTheme,
     );
   }
 }
