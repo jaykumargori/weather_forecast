@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:weather_forecast/controllers/global_controller.dart';
 import 'package:weather_forecast/utilities/custom_colors.dart';
@@ -14,12 +13,10 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   final args = Get.arguments;
   final TextEditingController _controller = TextEditingController();
-  late final List<Placemark> placements;
 
   @override
   void initState() {
     _controller.text = args[1];
-    placements = args[0];
     super.initState();
   }
 
@@ -55,44 +52,48 @@ class _SearchState extends State<Search> {
               ),
             ),
             Expanded(
-              child: ListView.separated(
-                  padding: const EdgeInsets.all(12.0).copyWith(top: 0),
-                  itemCount: placements.length,
-                  scrollDirection: Axis.vertical,
-                  separatorBuilder: (context, index) {
-                    return const Divider();
-                  },
-                  itemBuilder: (context, index) {
-                    final place = placements[index];
-                    final title$1 = place.name ?? '';
-                    final title$2 = place.postalCode ?? '';
-                    final title = '${title$1}, ${title$2}';
-                    final subtitle$1 = place.locality ?? '';
-                    final subtitle$2 = place.administrativeArea ?? '';
-                    final subtitle$3 = place.country ?? '';
-                    final subtitle =
-                        '${subtitle$1}, ${subtitle$2}, ${subtitle$3}';
-                    return ListTile(
-                      minLeadingWidth: 24,
-                      leading: const Icon(
-                        Icons.place,
-                        color: CustomColors.firstGradientColor,
-                      ),
-                      onTap: () {
-                        Get.toNamed('/', arguments: [place.locality]);
-                      },
-                      title: Text(title),
-                      subtitle: Text(subtitle),
-                      trailing: const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: CustomColors.firstGradientColor,
-                        size: 16,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    );
-                  }),
+              child: Obx(() {
+                final controller = GlobalController.to;
+                final placements = controller.placemarks;
+                return ListView.separated(
+                    padding: const EdgeInsets.all(12.0).copyWith(top: 0),
+                    itemCount: placements.length,
+                    scrollDirection: Axis.vertical,
+                    separatorBuilder: (context, index) {
+                      return const Divider();
+                    },
+                    itemBuilder: (context, index) {
+                      final place = placements[index];
+                      final title$1 = place.name ?? '';
+                      final title$2 = place.postalCode ?? '';
+                      final title = '${title$1}, ${title$2}';
+                      final subtitle$1 = place.locality ?? '';
+                      final subtitle$2 = place.administrativeArea ?? '';
+                      final subtitle$3 = place.country ?? '';
+                      final subtitle =
+                          '${subtitle$1}, ${subtitle$2}, ${subtitle$3}';
+                      return ListTile(
+                        minLeadingWidth: 24,
+                        leading: const Icon(
+                          Icons.place,
+                          color: CustomColors.firstGradientColor,
+                        ),
+                        onTap: () {
+                          Get.toNamed('/', arguments: [place.locality]);
+                        },
+                        title: Text(title),
+                        subtitle: Text(subtitle),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: CustomColors.firstGradientColor,
+                          size: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      );
+                    });
+              }),
             ),
           ],
         ),

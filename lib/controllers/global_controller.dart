@@ -7,6 +7,10 @@ import 'package:weather_forecast/models/weather_data.dart';
 class GlobalController extends GetxController {
   static GlobalController get to => Get.find();
 
+  final RxList<Placemark> _placemarks = RxList<Placemark>([]);
+
+  List<Placemark> get placemarks => _placemarks;
+
   // create various variables
   final RxBool _isLoading = true.obs;
   final RxDouble _lattitude = 0.0.obs;
@@ -116,6 +120,7 @@ class GlobalController extends GetxController {
       }).toList();
       final result = await Future.wait(placemarkFuture);
       final placemarks = result.expand((element) => element).toList();
+      _placemarks.value = placemarks;
       Get.toNamed('search', arguments: [placemarks, query]);
     } catch (e) {
       Get.showSnackbar(
