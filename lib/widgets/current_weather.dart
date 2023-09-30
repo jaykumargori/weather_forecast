@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:weather_forecast/controllers/global_controller.dart';
 import 'package:weather_forecast/models/weather_data_current.dart';
 import 'package:weather_forecast/utilities/custom_colors.dart';
 
@@ -14,10 +16,7 @@ class CurrentWeather extends StatelessWidget {
       children: [
         //tempeture area
         tempeatureAreaWidget(),
-
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         // more details - windspeed, humidity, clouds
         currentWeatherMoreDetailsWidget(),
       ],
@@ -114,24 +113,30 @@ class CurrentWeather extends StatelessWidget {
             width: 1,
             color: CustomColors.dividerLine,
           ),
-          Text.rich(
-            TextSpan(children: [
-              TextSpan(
-                  text: "${weatherDataCurrent.current.temp!.toInt()}°C",
+          Obx(() {
+            final controller = GlobalController.to;
+            final unit = controller.isFahrenheit.isTrue ? "°F" : "°C";
+            return Text.rich(
+              TextSpan(children: [
+                TextSpan(
+                  text: "${weatherDataCurrent.current.temp!.toInt()}$unit",
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 50,
-                  )),
-              TextSpan(
+                  ),
+                ),
+                TextSpan(
                   text:
                       "   ${weatherDataCurrent.current.weather![0].description}",
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
                     color: Colors.grey,
-                  )),
-            ]),
-          )
+                  ),
+                ),
+              ]),
+            );
+          })
         ],
       ),
     );

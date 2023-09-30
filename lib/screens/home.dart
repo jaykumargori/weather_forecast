@@ -27,21 +27,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalController globalController =
       Get.put(GlobalController(), permanent: true);
 
-  bool toggleButton1Value = false;
-  bool toggleButton2Value = false;
-
   @override
   void initState() {
     if (args != null) {
       final searchQuery = args[0];
       if (searchQuery != '') {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          List<Location> locations = await locationFromAddress(searchQuery);
-          globalController.getLocationUsingCoordinates(
-            locations[0].latitude,
-            locations[0].longitude,
-            'metric',
-          );
+          GlobalController.to.search(searchQuery, false);
         });
       }
     }
@@ -93,47 +85,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   )),
                   child: Column(
                     children: [
-                      Toggle(
-                        label: 'Dark Mode',
-                        value: toggleButton1Value,
-                        onChanged: (newValue) {
-                          setState(() {
-                            toggleButton1Value = newValue;
-                          });
-                          Get.changeThemeMode(
-                            newValue ? ThemeMode.dark : ThemeMode.light,
-                          );
-                        },
-                      ),
-                      Toggle(
-                        label: 'Show in Farenheit',
-                        value: toggleButton2Value,
-                        onChanged: (newValue) async {
-                          setState(() => toggleButton2Value = newValue);
-                          if (city == '') {
-                            final latitude =
-                                globalController.getLattitude().value;
-                            final longitude =
-                                globalController.getLongitude().value;
+                      Obx(() {
+                        return Toggle(
+                          label: 'Dark Mode',
+                          value: globalController.isDarkMode.value,
+                          onChanged: (newValue) {
+                            globalController.isDarkMode.value = newValue;
+                          },
+                        );
+                      }),
+                      Obx(() {
+                        return Toggle(
+                          label: 'Show in Farenheit',
+                          value: globalController.isFahrenheit.value,
+                          onChanged: (newValue) async {
+                            globalController.isFahrenheit.value = newValue;
+                            if (city == '') {
+                              final latitude =
+                                  globalController.getLattitude().value;
+                              final longitude =
+                                  globalController.getLongitude().value;
 
-                            globalController.getLocationUsingCoordinates(
-                              latitude,
-                              longitude,
-                              newValue ? 'imperial' : 'metric',
-                            );
-                          } else {
-                            List<Location> locations =
-                                await locationFromAddress(city);
-                            final latitude = locations[0].latitude;
-                            final longitude = locations[0].longitude;
-                            globalController.getLocationUsingCoordinates(
-                              latitude,
-                              longitude,
-                              newValue ? 'imperial' : 'metric',
-                            );
-                          }
-                        },
-                      ),
+                              globalController.getLocationUsingCoordinates(
+                                latitude,
+                                longitude,
+                                newValue ? 'imperial' : 'metric',
+                              );
+                            } else {
+                              List<Location> locations =
+                                  await locationFromAddress(city);
+                              final latitude = locations[0].latitude;
+                              final longitude = locations[0].longitude;
+                              globalController.getLocationUsingCoordinates(
+                                latitude,
+                                longitude,
+                                newValue ? 'imperial' : 'metric',
+                              );
+                            }
+                          },
+                        );
+                      }),
                     ],
                   ),
                 )

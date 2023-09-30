@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_forecast/api/fetch_weather.dart';
 import 'package:weather_forecast/models/weather_data.dart';
 
@@ -12,12 +14,16 @@ class GlobalController extends GetxController {
   List<Placemark> get placemarks => _placemarks;
 
   // create various variables
+  final RxBool _isFahrenheit = false.obs;
+  final RxBool _isDarkMode = false.obs;
   final RxBool _isLoading = true.obs;
   final RxDouble _lattitude = 0.0.obs;
   final RxDouble _longitude = 0.0.obs;
   final RxInt _currentIndex = 0.obs;
 
   // instance for them to be called
+  RxBool get isFahrenheit => _isFahrenheit;
+  RxBool get isDarkMode => _isDarkMode;
   RxBool checkLoading() => _isLoading;
   RxDouble getLattitude() => _lattitude;
   RxDouble getLongitude() => _longitude;
@@ -29,12 +35,23 @@ class GlobalController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     if (_isLoading.isTrue) {
       getLocation();
     } else {
       getIndex();
     }
+    final prefs = await SharedPreferences.getInstance();
+    ever(_isFahrenheit, (callback) async {
+      await prefs.setBool('isFahrenheit', callback);
+    });
+    ever(_isDarkMode, (callback) async {
+      await prefs.setBool('isDarkMode', callback);
+      Get.changeThemeMode(callback ? ThemeMode.dark : ThemeMode.light);
+    });
+    _isFahrenheit.value = prefs.getBool('isFahrenheit') ?? false;
+    _isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
+
     super.onInit();
   }
 
@@ -96,7 +113,7 @@ class GlobalController extends GetxController {
     return _currentIndex;
   }
 
-  Future<void> search(String query) async {
+  Future<void> search(String query, [bool redirect = true]) async {
     if (query.isEmpty) {
       Get.showSnackbar(
         const GetSnackBar(message: 'Please enter a valid address.'),
@@ -121,6 +138,9 @@ class GlobalController extends GetxController {
       final result = await Future.wait(placemarkFuture);
       final placemarks = result.expand((element) => element).toList();
       _placemarks.value = placemarks;
+      if (!redirect) {
+        return;
+      }
       Get.toNamed('search', arguments: [placemarks, query]);
     } catch (e) {
       Get.showSnackbar(
