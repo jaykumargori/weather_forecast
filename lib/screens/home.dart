@@ -96,10 +96,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: SearchFeld(
-        onSubmitted: globalController.search,
-      ),
+      // bottomNavigationBar: SearchFeld(
+      //   onSubmitted: globalController.search,
+      // ),
       body: SafeArea(
+        bottom: false,
         child: Obx(() => globalController.checkLoading().isTrue
             ? Center(
                 child: Column(
@@ -119,49 +120,62 @@ class _HomeScreenState extends State<HomeScreen> {
               ))
             : Obx(() {
                 final data = globalController.getData();
-                return Center(
-                  child: ListView(
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Header(searchCity: city),
-                          SizedBox(
-                            width: 70,
-                            child: IconButton(
-                                onPressed: () {
-                                  _scaffoldKey.currentState!.openEndDrawer();
-                                },
-                                icon: const Icon(
-                                  Icons.settings,
-                                  size: 40,
-                                )),
-                          )
-                        ],
+                return Stack(
+                  children: [
+                    ListView(
+                      scrollDirection: Axis.vertical,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Header(searchCity: city),
+                            SizedBox(
+                              width: 70,
+                              child: IconButton(
+                                  onPressed: () {
+                                    _scaffoldKey.currentState!.openEndDrawer();
+                                  },
+                                  icon: const Icon(
+                                    Icons.settings,
+                                    size: 40,
+                                  )),
+                            )
+                          ],
+                        ),
+                        CurrentWeather(
+                          weatherDataCurrent: data.getCurrentWeather(),
+                        ),
+                        const SizedBox(height: 20),
+                        HourlyData(
+                          weatherDataHourly: data.getHourlyWeather(),
+                        ),
+                        DailyDataForecast(
+                          weatherDataDaily: data.getDailyWeather(),
+                        ),
+                        Container(
+                          height: 1,
+                          color: CustomColors.dividerLine,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ComfortLevel(
+                          weatherDataCurrent: data.getCurrentWeather(),
+                        )
+                      ],
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        child: SearchFeld(
+                          onSubmitted: globalController.search,
+                        ),
                       ),
-                      CurrentWeather(
-                        weatherDataCurrent: data.getCurrentWeather(),
-                      ),
-                      const SizedBox(height: 20),
-                      HourlyData(
-                        weatherDataHourly: data.getHourlyWeather(),
-                      ),
-                      DailyDataForecast(
-                        weatherDataDaily: data.getDailyWeather(),
-                      ),
-                      Container(
-                        height: 1,
-                        color: CustomColors.dividerLine,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ComfortLevel(
-                        weatherDataCurrent: data.getCurrentWeather(),
-                      )
-                    ],
-                  ),
+                    ),
+                  ],
                 );
               })),
       ),
