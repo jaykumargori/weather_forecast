@@ -22,15 +22,16 @@ class DailyDataForecast extends StatelessWidget {
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-          color: CustomColors.dividerLine.withAlpha(150),
-          borderRadius: BorderRadius.circular(20)),
+        color: CustomColors.dividerLine.withAlpha(150),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         children: [
           Container(
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(bottom: 10),
             child: const Text(
-              "Next Days",
+              "Upcoming Days",
               style: TextStyle(fontSize: 17),
             ),
           ),

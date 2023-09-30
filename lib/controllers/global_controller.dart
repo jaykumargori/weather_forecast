@@ -1,9 +1,16 @@
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:weather_forecast/api/fetch_weather.dart';
 import 'package:weather_forecast/models/weather_data.dart';
 
 class GlobalController extends GetxController {
+  static GlobalController get to => Get.find();
+
+  final RxList<Placemark> _placemarks = RxList<Placemark>([]);
+
+  List<Placemark> get placemarks => _placemarks;
+
   // create various variables
   final RxBool _isLoading = true.obs;
   final RxDouble _lattitude = 0.0.obs;
@@ -87,5 +94,39 @@ class GlobalController extends GetxController {
 
   RxInt getIndex() {
     return _currentIndex;
+  }
+
+  Future<void> search(String query) async {
+    if (query.isEmpty) {
+      Get.showSnackbar(
+        const GetSnackBar(message: 'Please enter a valid address.'),
+      );
+      return;
+    }
+    try {
+      final locations = await locationFromAddress(query);
+      if (locations.isEmpty) {
+        Get.showSnackbar(
+          const GetSnackBar(
+              message: 'No locations found for the provided address.'),
+        );
+        return;
+      }
+      final placemarkFuture = locations.map((location) {
+        return placemarkFromCoordinates(
+          locations[0].latitude,
+          locations[0].longitude,
+        );
+      }).toList();
+      final result = await Future.wait(placemarkFuture);
+      final placemarks = result.expand((element) => element).toList();
+      _placemarks.value = placemarks;
+      Get.toNamed('search', arguments: [placemarks, query]);
+    } catch (e) {
+      Get.showSnackbar(
+        const GetSnackBar(
+            message: 'No locations found for the provided address.'),
+      );
+    }
   }
 }
