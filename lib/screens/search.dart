@@ -13,17 +13,17 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   final args = Get.arguments;
   final TextEditingController _controller = TextEditingController();
+  List<Placemark>? placements;
 
   @override
   void initState() {
     _controller.text = args[1];
+    placements = args[0];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Placemark> placements = args[0];
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -41,6 +41,47 @@ class _SearchState extends State<Search> {
                     horizontal: 24.0, vertical: 16.0),
                 child: TextField(
                   controller: _controller,
+                  onSubmitted: (value) async {
+                    if (value.isNotEmpty) {
+                      try {
+                        List<Location> locations =
+                            await locationFromAddress(value);
+                        if (locations.isNotEmpty) {
+                          List<Placemark> placemarks =
+                              await placemarkFromCoordinates(
+                                  locations[0].latitude,
+                                  locations[0].longitude);
+
+                          setState(() {
+                            placements = placemarks;
+                          });
+                        } else {
+                          // Handle the case where no locations were found
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'No locations found for the provided address.'),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        // Handle any errors that occur during geocoding or placemark lookup
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'No locations found for the provided address.'),
+                          ),
+                        );
+                      }
+                    } else {
+                      // Handle the case where the search field is empty
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please enter a valid address.'),
+                        ),
+                      );
+                    }
+                  },
                   cursorColor: CustomColors.textColorBlack,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(
@@ -65,7 +106,7 @@ class _SearchState extends State<Search> {
             Expanded(
               child: ListView.separated(
                   padding: const EdgeInsets.all(12.0),
-                  itemCount: placements.length,
+                  itemCount: placements?.length ?? 0,
                   scrollDirection: Axis.vertical,
                   separatorBuilder: (context, index) {
                     return const SizedBox(height: 12);
@@ -74,13 +115,13 @@ class _SearchState extends State<Search> {
                     return ListTile(
                       onTap: () {
                         Get.toNamed('/',
-                            arguments: [placements[index].locality]);
+                            arguments: [placements?[index].locality]);
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       tileColor: CustomColors.firstGradientColor,
-                      title: Text(placements[index].locality ?? ''),
+                      title: Text(placements?[index].locality ?? ''),
                       titleTextStyle:
                           const TextStyle(fontSize: 16, color: Colors.white),
                     );
