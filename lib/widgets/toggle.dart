@@ -4,8 +4,12 @@ class Toggle extends StatefulWidget {
   final String label;
   final bool value;
   final void Function(bool)? onChanged;
-  const Toggle(
-      {super.key, required this.value, this.onChanged, required this.label});
+  const Toggle({
+    super.key,
+    required this.value,
+    this.onChanged,
+    required this.label,
+  });
 
   @override
   State<Toggle> createState() => _ToggleState();
@@ -18,7 +22,9 @@ class _ToggleState extends State<Toggle> {
       title: Text(
         widget.label,
         style: const TextStyle(
-            fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
       ),
       trailing: Switch(
         activeColor: Colors.white,

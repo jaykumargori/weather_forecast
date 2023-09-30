@@ -57,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _scaffoldKey,
       endDrawer: Drawer(
         width: MediaQuery.of(context).size.width * 0.6,
-        backgroundColor: CustomColors.firstGradientColor,
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -70,22 +69,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 120,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     const Text(
                       'Settings',
                       style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: CustomColors.firstGradientColor),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: CustomColors.firstGradientColor,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Container(
                   decoration: const BoxDecoration(
                       border: Border(
