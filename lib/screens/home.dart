@@ -120,7 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               latitude,
                               longitude,
                               newValue ? 'imperial' : 'metric',
-                              forceRefresh: true,
                             );
                           } else {
                             List<Location> locations =
@@ -131,7 +130,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               latitude,
                               longitude,
                               newValue ? 'imperial' : 'metric',
-                              forceRefresh: true,
                             );
                           }
                         },
