@@ -24,6 +24,7 @@ String weatherDataToJson(WeatherData? weatherData) {
     'current': weatherData?.current?.toJson(),
     'hourly': weatherData?.hourly?.toJson(),
     'daily': weatherData?.daily?.toJson(),
+    'cacheTime': DateTime.now().millisecondsSinceEpoch,
   };
   return jsonEncode(data);
 }

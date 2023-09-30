@@ -71,8 +71,12 @@ class GlobalController extends GetxController {
     });
   }
 
-  getLocationUsingCoordinates(double lat, double long, String units,
-      {bool forceRefresh = false}) {
+  getLocationUsingCoordinates(
+    double lat,
+    double long,
+    String units, {
+    bool forceRefresh = false,
+  }) {
     return FetchWeatherAPI()
         .processData(lat, long, units, forceRefresh: forceRefresh)
         .then((value) {

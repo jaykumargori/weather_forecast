@@ -38,7 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           List<Location> locations = await locationFromAddress(searchQuery);
           globalController.getLocationUsingCoordinates(
-              locations[0].latitude, locations[0].longitude, 'metric');
+            locations[0].latitude,
+            locations[0].longitude,
+            'metric',
+          );
         });
       }
     }
@@ -100,50 +103,39 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {
                             toggleButton1Value = newValue;
                           });
-                          Get.changeTheme(Get.isDarkMode
-                              ? ThemeData.light()
-                              : ThemeData.dark());
+                          Get.changeThemeMode(
+                            newValue ? ThemeMode.dark : ThemeMode.light,
+                          );
                         },
                       ),
                       Toggle(
                         label: 'Show in Farenheit',
                         value: toggleButton2Value,
                         onChanged: (newValue) async {
+                          setState(() => toggleButton2Value = newValue);
                           if (city == '') {
                             final latitude =
                                 globalController.getLattitude().value;
                             final longitude =
                                 globalController.getLongitude().value;
 
-                            if (newValue) {
-                              globalController.getLocationUsingCoordinates(
-                                  latitude, longitude, 'imperial',
-                                  forceRefresh: true);
-                            } else {
-                              globalController.getLocationUsingCoordinates(
-                                  latitude, longitude, 'metric',
-                                  forceRefresh: true);
-                            }
-                            setState(() {
-                              toggleButton2Value = !newValue;
-                            });
+                            globalController.getLocationUsingCoordinates(
+                              latitude,
+                              longitude,
+                              newValue ? 'imperial' : 'metric',
+                              forceRefresh: true,
+                            );
                           } else {
                             List<Location> locations =
                                 await locationFromAddress(city);
                             final latitude = locations[0].latitude;
                             final longitude = locations[0].longitude;
-                            if (newValue) {
-                              globalController.getLocationUsingCoordinates(
-                                  latitude, longitude, 'imperial',
-                                  forceRefresh: true);
-                            } else {
-                              globalController.getLocationUsingCoordinates(
-                                  latitude, longitude, 'metric',
-                                  forceRefresh: true);
-                            }
-                            setState(() {
-                              toggleButton2Value = !newValue;
-                            });
+                            globalController.getLocationUsingCoordinates(
+                              latitude,
+                              longitude,
+                              newValue ? 'imperial' : 'metric',
+                              forceRefresh: true,
+                            );
                           }
                         },
                       ),
@@ -165,18 +157,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     locations[0].latitude, locations[0].longitude);
                 Get.toNamed('search', arguments: [placemarks, value]);
               } else {
+                if (!context.mounted) return;
                 // Handle the case where no locations were found
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content:
                         Text('No locations found for the provided address.'),
                   ),
                 );
               }
             } catch (e) {
+              if (!context.mounted) return;
               // Handle any errors that occur during geocoding or placemark lookup
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text('No locations found for the provided address.'),
                 ),
               );
@@ -184,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else {
             // Handle the case where the search field is empty
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text('Please enter a valid address.'),
               ),
             );
