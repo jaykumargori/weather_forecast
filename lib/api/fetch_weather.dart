@@ -9,8 +9,6 @@ import 'package:weather_forecast/models/weather_data_hourly.dart';
 import 'package:weather_forecast/utilities/api_url.dart';
 
 class FetchWeatherAPI {
-  WeatherData? weatherData;
-
   // procecssing the data from response -> to json
   Future<WeatherData> processData(lat, lon, units,
       {forceRefresh = false}) async {
@@ -23,16 +21,17 @@ class FetchWeatherAPI {
     }
 
     try {
-      var response = await http.get(Uri.parse(apiURL(lat, lon, units)));
+      final response = await http.get(Uri.parse(apiURL(lat, lon, units)));
 
       if (response.statusCode == 200) {
-        var jsonString = jsonDecode(response.body);
-        weatherData = WeatherData(
-            WeatherDataCurrent.fromJson(jsonString),
-            WeatherDataHourly.fromJson(jsonString),
-            WeatherDataDaily.fromJson(jsonString));
+        final jsonString = jsonDecode(response.body);
+        final weatherData = WeatherData(
+          WeatherDataCurrent.fromJson(jsonString),
+          WeatherDataHourly.fromJson(jsonString),
+          WeatherDataDaily.fromJson(jsonString),
+        );
         await WeatherDataStorage.saveWeatherData(weatherData, lat, lon, units);
-        return weatherData!;
+        return weatherData;
       } else {
         // Handle non-200 status codes here, e.g., by throwing an exception
         throw Exception('Failed to fetch weather data: ${response.statusCode}');

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:weather_forecast/controllers/global_controller.dart';
 import 'package:weather_forecast/utilities/custom_colors.dart';
@@ -26,20 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final GlobalController globalController =
       Get.put(GlobalController(), permanent: true);
-
-  @override
-  void initState() {
-    if (args != null) {
-      final searchQuery = args[0];
-      if (searchQuery != '') {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          GlobalController.to.search(searchQuery, false);
-        });
-      }
-    }
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,28 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           value: globalController.isFahrenheit.value,
                           onChanged: (newValue) async {
                             globalController.isFahrenheit.value = newValue;
-                            if (city == '') {
-                              final latitude =
-                                  globalController.getLattitude().value;
-                              final longitude =
-                                  globalController.getLongitude().value;
-
-                              globalController.getLocationUsingCoordinates(
-                                latitude,
-                                longitude,
-                                newValue ? 'imperial' : 'metric',
-                              );
-                            } else {
-                              List<Location> locations =
-                                  await locationFromAddress(city);
-                              final latitude = locations[0].latitude;
-                              final longitude = locations[0].longitude;
-                              globalController.getLocationUsingCoordinates(
-                                latitude,
-                                longitude,
-                                newValue ? 'imperial' : 'metric',
-                              );
-                            }
                           },
                         );
                       }),
@@ -154,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Text('Getting location info...')
                 ],
               ))
-            : Builder(builder: (context) {
+            : Obx(() {
                 final data = globalController.getData();
                 return Center(
                   child: ListView(

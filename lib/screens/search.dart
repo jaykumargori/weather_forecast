@@ -79,6 +79,7 @@ class _SearchState extends State<Search> {
                           color: CustomColors.firstGradientColor,
                         ),
                         onTap: () {
+                          controller.selectPlace(place);
                           Get.toNamed('/', arguments: [place.locality]);
                         },
                         title: Text(title),
