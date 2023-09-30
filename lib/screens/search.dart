@@ -82,7 +82,7 @@ class _SearchState extends State<Search> {
                       );
                     }
                   },
-                  cursorColor: CustomColors.textColorBlack,
+                  cursorColor: Colors.grey,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(
                       Icons.search_rounded,

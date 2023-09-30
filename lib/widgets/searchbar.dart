@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weather_forecast/utilities/custom_colors.dart';
 
 class SearchFeld extends StatefulWidget {
   final void Function(String)? onSubmitted;
@@ -20,7 +19,7 @@ class _SearchFeldState extends State<SearchFeld> {
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         child: TextField(
           onSubmitted: widget.onSubmitted,
-          cursorColor: CustomColors.textColorBlack,
+          cursorColor: Colors.grey,
           decoration: InputDecoration(
             prefixIcon: const Icon(
               Icons.search_rounded,
