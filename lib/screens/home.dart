@@ -157,13 +157,37 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: SearchFeld(
         onSubmitted: (value) async {
-          if (value != '') {
-            List<Location> locations = await locationFromAddress(value);
-            if (locations.isNotEmpty) {
-              List<Placemark> placemarks = await placemarkFromCoordinates(
-                  locations[0].latitude, locations[0].longitude);
-              Get.toNamed('search', arguments: [placemarks, value]);
+          if (value.isNotEmpty) {
+            try {
+              List<Location> locations = await locationFromAddress(value);
+              if (locations.isNotEmpty) {
+                List<Placemark> placemarks = await placemarkFromCoordinates(
+                    locations[0].latitude, locations[0].longitude);
+                Get.toNamed('search', arguments: [placemarks, value]);
+              } else {
+                // Handle the case where no locations were found
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Text('No locations found for the provided address.'),
+                  ),
+                );
+              }
+            } catch (e) {
+              // Handle any errors that occur during geocoding or placemark lookup
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('No locations found for the provided address.'),
+                ),
+              );
             }
+          } else {
+            // Handle the case where the search field is empty
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Please enter a valid address.'),
+              ),
+            );
           }
         },
       ),
