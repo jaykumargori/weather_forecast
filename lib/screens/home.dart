@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: _scaffoldKey,
       endDrawer: Drawer(
-        width: MediaQuery.of(context).size.width * 0.6,
+        width: MediaQuery.sizeOf(context).width * 0.6,
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -143,42 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: SearchFeld(
-        onSubmitted: (value) async {
-          if (value.isNotEmpty) {
-            try {
-              List<Location> locations = await locationFromAddress(value);
-              if (locations.isNotEmpty) {
-                List<Placemark> placemarks = await placemarkFromCoordinates(
-                    locations[0].latitude, locations[0].longitude);
-                Get.toNamed('search', arguments: [placemarks, value]);
-              } else {
-                if (!context.mounted) return;
-                // Handle the case where no locations were found
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content:
-                        Text('No locations found for the provided address.'),
-                  ),
-                );
-              }
-            } catch (e) {
-              if (!context.mounted) return;
-              // Handle any errors that occur during geocoding or placemark lookup
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('No locations found for the provided address.'),
-                ),
-              );
-            }
-          } else {
-            // Handle the case where the search field is empty
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Please enter a valid address.'),
-              ),
-            );
-          }
-        },
+        onSubmitted: globalController.search,
       ),
       body: SafeArea(
         child: Obx(() => globalController.checkLoading().isTrue
@@ -198,56 +163,55 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Text('Getting location info...')
                 ],
               ))
-            : Center(
-                child: ListView(
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Header(
-                          searchCity: city,
-                        ),
-                        SizedBox(
-                          width: 70,
-                          child: IconButton(
-                              onPressed: () {
-                                _scaffoldKey.currentState!.openEndDrawer();
-                              },
-                              icon: const Icon(
-                                Icons.settings,
-                                size: 40,
-                              )),
-                        )
-                      ],
-                    ),
-                    CurrentWeather(
-                      weatherDataCurrent:
-                          globalController.getData().getCurrentWeather(),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    HourlyData(
-                        weatherDataHourly:
-                            globalController.getData().getHourlyWeather()),
-                    DailyDataForecast(
-                      weatherDataDaily:
-                          globalController.getData().getDailyWeather(),
-                    ),
-                    Container(
-                      height: 1,
-                      color: CustomColors.dividerLine,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ComfortLevel(
-                        weatherDataCurrent:
-                            globalController.getData().getCurrentWeather())
-                  ],
-                ),
-              )),
+            : Builder(builder: (context) {
+                final data = globalController.getData();
+                return Center(
+                  child: ListView(
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Header(
+                            searchCity: city,
+                          ),
+                          SizedBox(
+                            width: 70,
+                            child: IconButton(
+                                onPressed: () {
+                                  _scaffoldKey.currentState!.openEndDrawer();
+                                },
+                                icon: const Icon(
+                                  Icons.settings,
+                                  size: 40,
+                                )),
+                          )
+                        ],
+                      ),
+                      CurrentWeather(
+                        weatherDataCurrent: data.getCurrentWeather(),
+                      ),
+                      const SizedBox(height: 20),
+                      HourlyData(
+                        weatherDataHourly: data.getHourlyWeather(),
+                      ),
+                      DailyDataForecast(
+                        weatherDataDaily: data.getDailyWeather(),
+                      ),
+                      Container(
+                        height: 1,
+                        color: CustomColors.dividerLine,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ComfortLevel(
+                        weatherDataCurrent: data.getCurrentWeather(),
+                      )
+                    ],
+                  ),
+                );
+              })),
       ),
     );
   }

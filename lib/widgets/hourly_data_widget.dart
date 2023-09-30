@@ -36,6 +36,7 @@ class HourlyData extends StatelessWidget {
             ? 14
             : weatherDataHourly.hourly.length,
         itemBuilder: (context, index) {
+          final hourly = weatherDataHourly.hourly[index];
           return Obx((() => GestureDetector(
               onTap: () {
                 cardIndex.value = index;
@@ -55,10 +56,9 @@ class HourlyData extends StatelessWidget {
                 child: HourlyDetails(
                   index: index,
                   cardIndex: cardIndex.toInt(),
-                  temp: weatherDataHourly.hourly[index].temp!,
-                  timeStamp: weatherDataHourly.hourly[index].dt!,
-                  weatherIcon:
-                      weatherDataHourly.hourly[index].weather![0].icon!,
+                  temp: hourly.temp!,
+                  timeStamp: hourly.dt!,
+                  weatherIcon: hourly.weather![0].icon!,
                 ),
               ))));
         },
@@ -75,14 +75,14 @@ class HourlyDetails extends StatelessWidget {
   final int timeStamp;
   final String weatherIcon;
 
-  const HourlyDetails(
-      {Key? key,
-      required this.cardIndex,
-      required this.index,
-      required this.timeStamp,
-      required this.temp,
-      required this.weatherIcon})
-      : super(key: key);
+  const HourlyDetails({
+    super.key,
+    required this.cardIndex,
+    required this.index,
+    required this.timeStamp,
+    required this.temp,
+    required this.weatherIcon,
+  });
   String getTime(final timeStamp) {
     DateTime time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
     String x = DateFormat('jm').format(time);
@@ -96,28 +96,22 @@ class HourlyDetails extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(top: 10),
-          child: Text(getTime(timeStamp),
-              style: TextStyle(
-                color: cardIndex == index
-                    ? Colors.white
-                    : CustomColors.textColorBlack,
-              )),
+          child: Text(getTime(timeStamp), style: const TextStyle()),
         ),
         Container(
-            margin: const EdgeInsets.all(5),
-            child: Image.asset(
-              "assets/weather/$weatherIcon.png",
-              height: 40,
-              width: 40,
-            )),
+          margin: const EdgeInsets.all(5),
+          child: Image.asset(
+            "assets/weather/$weatherIcon.png",
+            height: 40,
+            width: 40,
+          ),
+        ),
         Container(
           margin: const EdgeInsets.only(bottom: 10),
-          child: Text("$temp°",
-              style: TextStyle(
-                color: cardIndex == index
-                    ? Colors.white
-                    : CustomColors.textColorBlack,
-              )),
+          child: Text(
+            "$temp°",
+            style: const TextStyle(),
+          ),
         )
       ],
     );

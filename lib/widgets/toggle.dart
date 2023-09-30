@@ -27,7 +27,6 @@ class _ToggleState extends State<Toggle> {
         ),
       ),
       trailing: Switch(
-        activeColor: Colors.white,
         value: widget.value,
         onChanged: widget.onChanged,
       ),
