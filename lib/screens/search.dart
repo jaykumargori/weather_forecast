@@ -34,7 +34,6 @@ class _SearchState extends State<Search> {
                 margin: const EdgeInsets.only(bottom: 8.0),
                 height: 80,
                 decoration: BoxDecoration(
-                    color: Colors.white,
                     border: Border(
                         bottom: BorderSide(color: Colors.grey.shade400))),
                 padding: const EdgeInsets.symmetric(
