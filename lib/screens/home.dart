@@ -126,9 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Header(
-                            searchCity: city,
-                          ),
+                          Header(searchCity: city),
                           SizedBox(
                             width: 70,
                             child: IconButton(

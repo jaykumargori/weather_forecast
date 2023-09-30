@@ -38,7 +38,6 @@ class GlobalController extends GetxController {
 
   @override
   void onInit() async {
-    getLocation();
     final prefs = await SharedPreferences.getInstance();
     ever(_isFahrenheit, (callback) async {
       await prefs.setBool('isFahrenheit', callback);
@@ -52,9 +51,17 @@ class GlobalController extends GetxController {
       await prefs.setBool('isDarkMode', callback);
       Get.changeThemeMode(callback ? ThemeMode.dark : ThemeMode.light);
     });
+    ever(_lattitude, (callback) async {
+      await prefs.setDouble('lattitude', callback);
+    });
+    ever(_longitude, (callback) async {
+      await prefs.setDouble('longitude', callback);
+    });
+    _lattitude.value = prefs.getDouble('lattitude') ?? 0.0;
+    _longitude.value = prefs.getDouble('longitude') ?? 0.0;
     _isFahrenheit.value = prefs.getBool('isFahrenheit') ?? false;
     _isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
-
+    getLocation();
     super.onInit();
   }
 
@@ -80,7 +87,14 @@ class GlobalController extends GetxController {
         return Future.error("Location permission is denied");
       }
     }
-
+    if (_lattitude.value != 0.0 && _longitude.value != 0.0) {
+      await getLocationUsingCoordinates(
+        _lattitude.value,
+        _longitude.value,
+        isFahrenheit.isTrue ? 'imperial' : 'metric',
+      );
+      return;
+    }
     // getting the currentposition
     return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
